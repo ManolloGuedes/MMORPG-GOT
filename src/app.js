@@ -2,6 +2,6 @@
 var app = require('./config/server');
 
 /* parametrizar a porta de escuta */
-app.listen(8080, function(){
+app.listen(global.gConfig.node_port, () => {
 	console.log('Servidor online');
-})
+});
