@@ -5,20 +5,24 @@
         "app_desc": "my app desc",
         "node_port": 8080,
         "json_indentation": 4,
-        "database": "my-app-db-dev"
+        "database_uri": "mongodb+srv://admin:<password>@cluster0-afho7.mongodb.net/test?retryWrites=true&w=majority",
+        "dbName": "test"
     },
     "testing": {
         "config_id": "testing",
-        "database": "my-app-db-test"
+        "database_uri": "my-app-db-test",
+        "dbName": "test"
     },
     "staging": {
         "config_id": "staging",
         "node_port": 8080,
-        "database": "my-app-db-stag"
+        "database_uri": "my-app-db-stag",
+        "dbName": "test"
     },
     "production": {
         "config_id": "production",
         "node_port": 8080,
-        "database": "my-app-db-prod"
+        "database_uri": "my-app-db-prod",
+        "dbName": "test"
     }
 }
