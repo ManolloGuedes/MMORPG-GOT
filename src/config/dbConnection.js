@@ -1,13 +1,34 @@
 const MongoClient = require('mongodb').MongoClient;
 const assert = require("assert");
 
-const uri = global.gConfig.database_uri;
+const dotenv = require('dotenv');
+dotenv.config();
+
+const uri = process.env.DB_URI;
 const client = new MongoClient(uri, { useNewUrlParser: true });
 
-client.connect(err => {
-  assert.equal(null, err);
-  console.log("Connected successfully to server");
-  const db = client.db(global.gConfig.dbName);
-  // perform actions on the collection object
-  client.close();
-});
+const connection = (dados) => {
+  client.connect(err => {
+    assert.equal(null, err);
+    console.log("Connected successfully to server");
+    const db = client.db(process.env.DB_NAME);
+    // perform actions on the collection object
+    query(db, dados);
+    client.close();
+  });
+}
+
+function query(db, dados) {
+  var collection = db.collection(dados.collection);
+  switch(dados.operacao) {
+    case 'inserir':
+      collection.insertOne(dados.usuario, dados.callback);
+      break;
+    default:
+      break;
+  }
+}
+
+module.exports = () => {
+  return connection
+};
