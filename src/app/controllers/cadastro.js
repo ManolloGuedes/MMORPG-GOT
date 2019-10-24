@@ -1,8 +1,8 @@
-module.exports.cadastro = (aplication, req, res) => {
+module.exports.cadastro = (application, req, res) => {
   res.render('cadastro', { validacao: {}, dadosForm: {} });
 }
 
-module.exports.cadastrar = (aplication, req, res) => {
+module.exports.cadastrar = (application, req, res) => {
   let dadosForm = req.body;
 
   req.assert('nome', 'Nome não pode ser vazio').notEmpty();
@@ -17,5 +17,10 @@ module.exports.cadastrar = (aplication, req, res) => {
     return;
   }
 
-  res.render('cadastro');
+  let dbConnection = application.config.dbConnection;
+
+  let usuarioDao = new application.app.models.UsuarioDao(dbConnection);
+  usuarioDao.inserirUsuario(dadosForm);
+
+  res.send('podemos cadastrar');
 }
