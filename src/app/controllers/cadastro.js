@@ -22,5 +22,10 @@ module.exports.cadastrar = (application, req, res) => {
   let usuarioDao = new application.app.models.UsuarioDao(dbConnection);
   usuarioDao.inserirUsuario(dadosForm);
 
+  let dadosJogo = new application.app.models.DadosJogo(null, dadosForm.usuario);
+  
+  let jogoDao = new application.app.models.JogoDao(dbConnection);
+  jogoDao.inserir(dadosJogo.json);
+
   res.send('podemos cadastrar');
 }

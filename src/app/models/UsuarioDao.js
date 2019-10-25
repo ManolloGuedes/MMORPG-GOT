@@ -6,7 +6,7 @@ class UsuarioDao {
   inserirUsuario(usuario) {
     let dados = {
       operacao: 'inserir',
-      usuario: usuario,
+      dados: usuario,
       collection: 'usuario',
       callback: (err, result) => {
         console.log('foi!');
