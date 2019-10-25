@@ -22,7 +22,7 @@ function query(db, dados) {
   var collection = db.collection(dados.collection);
   switch(dados.operacao) {
     case 'inserir':
-      collection.insertOne(dados.usuario, dados.callback);
+      collection.insertOne(dados.dados, dados.callback);
       break;
     case 'buscar':
       collection.find(dados.usuario).toArray(dados.callback);
