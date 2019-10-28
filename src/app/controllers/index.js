@@ -16,8 +16,8 @@ module.exports.autenticar = (application, req, res) => {
   }
 
   let dbConnection = application.config.dbConnection;
-  let usuarioDao = new application.app.models.UsuarioDao(dbConnection);
+  const UsuarioDao = application.app.models.Usuario.UsuarioDao;
 
-  usuarioDao.autenticar(dadosForm, req, res);
+  UsuarioDao.autenticar(dadosForm, req, res);
   
 }

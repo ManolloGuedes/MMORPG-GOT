@@ -1,5 +1,22 @@
+const db = require('../../config/dbConnection');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const dadosJogoSchema = new Schema({
+  moeda: Number,
+  suditos: Number,
+  temor: Number,
+  sabedoria: Number,
+  comercio: Number,
+  magia: Number
+});
+
 class DadosJogo {
-  constructor(dadosJogo, usuario) {
+  get id() { //gets and sets will not become a document method
+    return this._id;
+  }
+
+  gerarDados(dadosJogo) {
     if(!dadosJogo) {
       dadosJogo = {
         moeda: 15,
@@ -11,83 +28,20 @@ class DadosJogo {
       }
     } 
     
-    this._usuario = usuario
-    this._moeda = dadosJogo.moeda;
-    this._suditos = dadosJogo.suditos;
-    this._temor = dadosJogo.temor;
-    this._sabedoria = dadosJogo.sabedoria;
-    this._comercio = dadosJogo.comercio;
-    this._magia = dadosJogo.magia;
+    this.moeda = dadosJogo.moeda;
+    this.suditos = dadosJogo.suditos;
+    this.temor = dadosJogo.temor;
+    this.sabedoria = dadosJogo.sabedoria;
+    this.comercio = dadosJogo.comercio;
+    this.magia = dadosJogo.magia;
   }
-
-  get usuario() {
-    return this._usuario;
-  }
-
-  set usuario(usuario) {
-    this._usuario = usuario;
-  }
-
-  get moeda() {
-    return this._moeda;
-  }
-  
-  set moeda(moeda) {
-    this._moeda = moeda;
-  }
-
-  get suditos() {
-    return this._suditos;
-  }
-  
-  set suditos(suditos) {
-    this._suditos = suditos;
-  }
-
-  get temor() {
-    return this._temor;
-  }
-  
-  set temor(temor) {
-    this._temor = temor;
-  }
-
-  get sabedoria() {
-    return this._sabedoria;
-  }
-  
-  set sabedoria(sabedoria) {
-    this._sabedoria = sabedoria;
-  }
-
-  get comercio() {
-    return this._comercio;
-  }
-  
-  set comercio(comercio) {
-    this._comercio = comercio;
-  }
-
-  get magia() {
-    return this._magia;
-  }
-  
-  set magia(magia) {
-    this._magia = magia;
-  }
-
-  get json() {
-    return {
-      usuario: this.usuario,
-      moeda: this.moeda,
-      suditos: this.suditos,
-      temor: this.temor,
-      sabedoria: this.sabedoria,
-      comercio: this.comercio,
-      magia: this.magia,
-    };
-  }
-  
 }
 
-module.exports = () => DadosJogo;
+dadosJogoSchema.loadClass(DadosJogo);
+
+let dadosJogoModel = mongoose.model('DadosJogo', dadosJogoSchema);
+
+module.exports = {
+  DadosJogoDao: dadosJogoModel,
+  Schema: dadosJogoSchema
+}

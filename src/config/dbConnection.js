@@ -1,37 +1,42 @@
-const MongoClient = require('mongodb').MongoClient;
-const assert = require("assert");
-
+const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+
 dotenv.config();
-
 const uri = process.env.DB_URI;
-const client = new MongoClient(uri, { useNewUrlParser: true });
 
-const connection = (dados) => {
-  client.connect(err => {
-    assert.equal(null, err);
-    console.log("Connected successfully to server");
-    const db = client.db(process.env.DB_NAME);
-    // perform actions on the collection object
-    query(db, dados);
-    client.close();
-  });
-}
+class Database {
+  constructor() {
+    this._connect()
+  }
+  
+  _connect() {
+    mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+      .then(() => {
+        console.log('Database connection successful');
 
-function query(db, dados) {
-  var collection = db.collection(dados.collection);
-  switch(dados.operacao) {
-    case 'inserir':
-      collection.insertOne(dados.dados, dados.callback);
-      break;
-    case 'buscar':
-      collection.find(dados.usuario).toArray(dados.callback);
-      break;
-    default:
-      break;
+        mongoose.connection.on('connected', function(){
+          console.log(connected("Mongoose default connection is open to ", dbURL));
+        });
+
+        mongoose.connection.on('error', function(err){
+            console.log(error("Mongoose default connection has occured "+err+" error"));
+        });
+
+        mongoose.connection.on('disconnected', function(){
+            console.log(disconnected("Mongoose default connection is disconnected"));
+        });
+
+        process.on('SIGINT', function(){
+            mongoose.connection.close(function(){
+                console.log(termination("Mongoose default connection is disconnected due to application termination"));
+                process.exit(0)
+            });
+        });
+      })
+      .catch(err => {
+        console.error('Database connection error')
+      });
   }
 }
 
-module.exports = () => {
-  return connection
-};
+module.exports = new Database();
