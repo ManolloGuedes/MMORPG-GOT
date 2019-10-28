@@ -10,7 +10,7 @@ class JogoController {
       res.render('index', {validacao: [{msg: 'Por favor, realize o login'}]});
     } 
   
-    res.render('jogo', {nomecasa: req.session.casa});
+    res.render('jogo', {usuario: req.session.usuario});
   }
 }
 

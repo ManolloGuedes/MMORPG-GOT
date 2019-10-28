@@ -19,8 +19,7 @@ class IndexController {
     let usuario = await UsuarioDao.autenticar(dadosForm);
     if(usuario != undefined) {
       req.session.autorizado = true;
-      req.session.usuario = usuario.nome;
-      req.session.casa = usuario.casa;
+      req.session.usuario = usuario;
     }
 
     if(req.session.autorizado) {
