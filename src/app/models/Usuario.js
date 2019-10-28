@@ -17,27 +17,28 @@ class Usuario {
     return this._id;
   }
 
-  static buscarPorUsuario(usuario) { //static document method creation
+  static async buscarPorUsuario(usuario) { //static document method creation
     return this.findOne({usuario});
   }
 
-  static autenticar(usuario, req, res) {
-    this.find({
+  static async autenticar(usuario) {
+    return this.findOne({
       usuario: usuario.usuario, 
       senha: usuario.senha
-    }, (err, result) => {
-      if(result && result[0] != undefined) {
-        req.session.autorizado = true;
-        req.session.usuario = result[0].nome;
-        req.session.casa = result[0].casa;
-      }
+    });
+  }
 
-      if(req.session.autorizado) {
-        res.redirect('jogo');
-      } else {
-        res.render('index', {validacao: {}});
-      }
-    })
+  async gerarDadosDeJogo() {
+    this.dadosJogo = new dadosJogo.DadosJogoDao();
+    await this.dadosJogo.gerarDados();
+  }
+
+  async criarUsuario() {
+    try {
+      return await this.save();
+    } catch(exception) {
+      return exception;
+    }
   }
 }
 

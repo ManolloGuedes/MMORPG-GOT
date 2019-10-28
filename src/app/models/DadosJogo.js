@@ -16,7 +16,7 @@ class DadosJogo {
     return this._id;
   }
 
-  gerarDados(dadosJogo) {
+  async gerarDados(dadosJogo) {
     if(!dadosJogo) {
       dadosJogo = {
         moeda: 15,

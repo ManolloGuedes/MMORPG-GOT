@@ -1,23 +1,39 @@
-module.exports.index = (application, req, res) => {
-  res.render('index', {validacao:{}});
-}
+const Usuario = require('../models/Usuario');
 
-module.exports.autenticar = (application, req, res) => {
-  let dadosForm = req.body;
-
-  req.assert('usuario', 'Usuário não pode ser vazio').notEmpty();
-  req.assert('senha', 'Senha não pode ser vazia').notEmpty();
+class IndexController {
+  static async autenticar (application, req, res) {
+    let dadosForm = req.body;
   
-  let erros = req.validationErrors();
+    req.assert('usuario', 'Usuário não pode ser vazio').notEmpty();
+    req.assert('senha', 'Senha não pode ser vazia').notEmpty();
+    
+    let erros = req.validationErrors();
+  
+    if(erros) {
+      res.render('index', {validacao: erros});
+      return;
+    }
+  
+    const UsuarioDao = Usuario.UsuarioDao;
+  
+    let usuario = await UsuarioDao.autenticar(dadosForm);
+    if(usuario != undefined) {
+      req.session.autorizado = true;
+      req.session.usuario = usuario.nome;
+      req.session.casa = usuario.casa;
+    }
 
-  if(erros) {
-    res.render('index', {validacao: erros});
-    return;
+    if(req.session.autorizado) {
+      res.redirect('jogo');
+    } else {
+      res.render('index', {validacao: {}});
+    }
+    
   }
 
-  let dbConnection = application.config.dbConnection;
-  const UsuarioDao = application.app.models.Usuario.UsuarioDao;
-
-  UsuarioDao.autenticar(dadosForm, req, res);
-  
+  static async index (application, req, res) {
+    res.render('index', {validacao:{}});
+  }
 }
+
+module.exports = IndexController;
