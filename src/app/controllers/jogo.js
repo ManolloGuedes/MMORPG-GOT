@@ -12,6 +12,14 @@ class JogoController {
   
     res.render('jogo', {usuario: req.session.usuario});
   }
+
+  static async suditos(application, req, res) {
+    res.render('aldeoes', {validacao: {}});
+  }
+
+  static async pergaminhos(application, req, res) {
+    res.render('pergaminhos', {validacao: {}});
+  }
 }
 
 module.exports = JogoController;
