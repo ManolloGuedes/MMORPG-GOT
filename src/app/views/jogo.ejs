@@ -30,6 +30,8 @@
 			});
 
 			carregarAcoes = function(url) {
+				$('#erros').hide();
+
 				$.ajax({
 					url: url,
 					method: 'get',
@@ -52,7 +54,8 @@
 		</nav>
 
 	    <div class="container">
-	    	
+			<div class="alert alert-danger" id="erros" hidden>
+			</div>
 			<div class="row">
 	    		<div class="col-sm-3 casa">
 					<img src="images/casa_<%= usuario.casa %>.jpg" />
