@@ -66,7 +66,7 @@ class Acao {
       }
     }
 
-    return this.find(query);
+    return this.find(query).sort({dataTermino: 1});
   }
 }
 

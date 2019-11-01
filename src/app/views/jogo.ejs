@@ -25,11 +25,11 @@
 				});
 				
 				$('#pergaminhos').click(() => {
-					carregarAcoes('/pergaminhos');
+					carregarAcoes('/pergaminhos', cronometro);
 				});
 			});
 
-			carregarAcoes = function(url) {
+			carregarAcoes = function(url, callback) {
 				$('#erros').hide();
 
 				$.ajax({
@@ -37,8 +37,29 @@
 					method: 'get',
 					success: (data) => {
 						$('#acoes').html(data);
+						if(callback) {
+							callback();
+						}
 					}
 				});
+			}
+
+			function cronometro() {
+				let tempoRestanteAcoes = $('.tempo-restante');
+				tempoRestanteAcoes.each(function() {
+					let spanSegundos = $(this);
+					let segundos = parseInt(spanSegundos.html()) - 1;
+
+					if(segundos > 0) {
+						$(this).html(segundos);
+					} else {
+						spanSegundos.closest('li').remove();
+					}
+				});
+				
+				if(tempoRestanteAcoes.length > 0) {
+					setTimeout('cronometro()', 1000);
+				}
 			}
 		</script>
 	</head>
