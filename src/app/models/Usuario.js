@@ -18,7 +18,11 @@ class Usuario {
   }
 
   static async buscarPorUsuario(usuario) { //static document method creation
-    return this.findOne({usuario});
+    return await this.findOne(
+      {
+        _id: usuario._id
+      }
+    );
   }
 
   static async autenticar(usuario) {
@@ -38,6 +42,27 @@ class Usuario {
       return await this.save();
     } catch(exception) {
       return exception;
+    }
+  }
+
+  async buscarDadosJogo() {
+    return this.dadosJogo;
+  }
+
+  static async atualizar(usuario) {
+    try{
+      
+      await this.updateOne(
+        {
+          _id: usuario.id
+        }, {
+          nome: usuario.nome,
+          senha: usuario.senha,
+          dadosJogo: usuario.dadosJogo
+        }
+      )
+    } catch(err) {
+      console.log(err);
     }
   }
 }

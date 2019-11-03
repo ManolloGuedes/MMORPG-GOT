@@ -68,15 +68,53 @@ class JogoController {
 
     let acao = new Acao.AcaoDao(dadosForm);
 
-    let usuario = new Usuario.UsuarioDao(req.session.usuario);
-    acao.criarRelacaoUsuario(usuario.id);
+    let moedas;
 
+    switch(parseInt(acao.acao)) {
+      case 1:
+        moedas = 2 * acao.quantidade;
+        break;
+      case 2:
+        moedas = 3 * acao.quantidade;
+        break;
+      case 3:
+        moedas = 1 * acao.quantidade;
+        break;
+      case 4:
+        moedas = 1 * acao.quantidade;
+        break;
+    }
+
+    let usuario = await Usuario.UsuarioDao.buscarPorUsuario(req.session.usuario);
+    
+    await acao.criarRelacaoUsuario(usuario.id);
+    
+    let dadosJogo = await usuario.buscarDadosJogo();
+    dadosJogo.moeda -= moedas;
+
+    usuario.dadosJogo = dadosJogo;
+    await Usuario.UsuarioDao.atualizar(usuario);
+    
     await acao.configurarDataTermino();
 
     acao.save();
 
     res.send('Seus suditos realizarão a sua ordem.');
 
+  }
+
+  static async revogarAcao(application, req, res) {
+    let query = req.query;
+    let id = query ? query.id : null;
+    
+    if(id) {
+      const acaoRevogada = await Acao.AcaoDao.revogarAcao(req.session.usuario, id);
+      if(acaoRevogada) {
+        res.redirect('jogo');
+        return;
+      }
+    }
+    res.send('Mestre, não foi possível revogar essa ação. Poderia tentar mais tarde?')
   }
 }
 

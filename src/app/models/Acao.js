@@ -19,7 +19,7 @@ class Acao {
     return this._id;
   }
 
-  criarRelacaoUsuario(id) {
+  async criarRelacaoUsuario(id) {
     this.usuario = id;
   }
 
@@ -67,6 +67,15 @@ class Acao {
     }
 
     return this.find(query).sort({dataTermino: 1});
+  }
+
+  static async revogarAcao(usuario, idAcao) {
+    const resultadoDelecao = await this.deleteOne({
+      _id: idAcao,
+      usuario: usuario._id
+    });
+
+    return resultadoDelecao.ok == 1;
   }
 }
 

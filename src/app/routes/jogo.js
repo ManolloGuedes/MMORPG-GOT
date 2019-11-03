@@ -24,4 +24,8 @@ module.exports = function(application){
 			return res.status(500).send(err);
 		}
 	});
+
+	application.get('/revogarAcao', function(req, res) {
+		JogoController.revogarAcao(application, req, res);
+	});
 }
