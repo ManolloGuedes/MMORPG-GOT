@@ -1,6 +1,8 @@
-const db = require('../../config/dbConnection');
+const crypto = require('crypto')
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+
+const db = require('../../config/dbConnection');
 
 const dadosJogo = require('./DadosJogo')
 
@@ -26,9 +28,10 @@ class Usuario {
   }
 
   static async autenticar(usuario) {
+    let senhaCriptografada = criptografarDado(usuario.senha);
     return this.findOne({
       usuario: usuario.usuario, 
-      senha: usuario.senha
+      senha: senhaCriptografada
     });
   }
 
@@ -39,6 +42,8 @@ class Usuario {
 
   async criarUsuario() {
     try {
+      let senhaCriptografada = criptografarDado(this.senha);
+      this.senha = senhaCriptografada;
       return await this.save();
     } catch(exception) {
       return exception;
@@ -56,8 +61,6 @@ class Usuario {
         {
           _id: usuario.id
         }, {
-          nome: usuario.nome,
-          senha: usuario.senha,
           dadosJogo: usuario.dadosJogo
         }
       )
@@ -65,6 +68,10 @@ class Usuario {
       console.log(err);
     }
   }
+}
+
+function criptografarDado(dado) {
+  return crypto.createHash('md5').update(dado).digest('hex');
 }
 
 usuarioSchema.loadClass(Usuario);
